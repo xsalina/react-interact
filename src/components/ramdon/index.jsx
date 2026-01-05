@@ -419,6 +419,13 @@ export default function App() {
       }, 80);
     }
   };
+  // --- 🔒 新增：专门用于关闭结果页 ---
+  const closeResult = (e) => {
+    // 阻止事件冒泡，防止点到别的地方
+    e && e.stopPropagation(); 
+    setShowResult(false);
+    setCurrentFood('今天吃什么饼🫓?');
+  };
 
   useEffect(() => {
     return () => clearInterval(intervalRef.current);
@@ -502,7 +509,7 @@ export default function App() {
         {!showResult && (
           <ControlGroup>
             <ActionArea
-              onPointerDown={handleToggle}
+              onClick={handleToggle}
               whileTap={{ scale: 0.95 }}
               animate={
                 isSpinning
@@ -548,7 +555,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onPointerDown={handleToggle}
+              onClick={closeResult}
             >
               <motion.div
                 initial={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -559,7 +566,7 @@ export default function App() {
                   transition: { type: "spring", stiffness: 400, damping: 25 },
                 }}
                 exit={{ scale: 0.8, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()} // 防止点卡片误触关闭
+                onClick={(e) => e.stopPropagation()}
               >
                 <div
                   style={{
@@ -629,7 +636,11 @@ export default function App() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={handleToggle}
+                    onClick={(e) => {
+                         closeResult(e);
+                         // 如果你想点这个按钮直接开始下一次旋转，可以用下面这行代替上面那行：
+                        //  handleToggle(e); 
+                    }}
                     style={{
                       border: "none",
                       padding: "16px 48px",
